@@ -356,13 +356,30 @@ final class Storipress {
 				continue;
 			}
 
+            $excluded_post_types = array(
+                'revision',
+                'attachment',
+                'elementor_library',
+                'wp_global_styles',
+                'nav_menu_item',
+                'elementor-hf',
+                'custom_css',
+                'oembed_cache',
+                'monsterinsights_note',
+                'e-landing-page',
+                'wpcf7_contact_form',
+            );
+            if (in_array($post->post_type, $excluded_post_types)) {
+                continue;
+            }
+
 			setup_postdata( $post );
 
 			$this->flush(
 				$post->post_type,
 				array_merge(
-					$this->get_post_data( $post ),
-					$this->get_post_taxonomies( $post )
+					$this->get_post_data( $post )
+//					$this->get_post_taxonomies( $post )
 				)
 			);
 
@@ -458,7 +475,7 @@ final class Storipress {
 		return array(
 			'id'          => (string) $post->ID,
 			'post_id'     => empty( $post->post_parent ) ? null : (string) $post->post_parent,
-			'type'        => $post->post_type,
+			'post_type'        => $post->post_type,
 			'author_id'   => $post->post_author,
 			'title'       => $post->post_title, /* do not use get_the_title */
 			'slug'        => $post->post_name,
